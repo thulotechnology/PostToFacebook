@@ -1,46 +1,44 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:post_to_facebook/models/facebook_post_response.dart';
+import 'package:post_to_facebook/src/facebook_post_response.dart';
 
-/// This function posts a message to a Facebook page using the Facebook Graph API and returns a response
-/// indicating whether the post was successful or not.
+/// Posts a message and/or image to a Facebook page using the Facebook Graph API.
 ///
-/// Args:
-///   accessToken (String): A string representing the access token for the Facebook account that has
-/// permission to post to the specified Facebook page.
-///   pageId (String): The ID of the Facebook page where the post will be made.
-///   message (String): The message that you want to post on the Facebook page.
+/// Required parameters:
+/// * [accessToken]: The access token for the Facebook app associated with the page.
+/// * [pageId]: The ID of the Facebook page to post to.
+/// * [message]: The message to include in the post.
 ///
-/// Returns:
-///   A `Future` of `FacebookPostResponse` object is being returned.
-Future<FacebookPostResponse> postToFacebook(
-    {required String accessToken,
-    required String pageId,
-    required String message}) async {
+/// Optional parameter:
+/// * [imageUrl]: The URL of the image to include in the post.
+///
+/// Returns a [Future] that completes with a [FacebookPostResponse] object containing:
+/// * [isSuccess]: A [bool] indicating whether the post was successful.
+/// * [message]: A [String] with a message describing the outcome of the post attempt.
+/// * [response]: An [http.Response] object containing the response data from the Facebook API.
+Future<FacebookPostResponse> postToFacebook({
+  required String accessToken,
+  required String pageId,
+  required String message,
+  String? imageUrl,
+}) async {
   final url = Uri.parse(
-      'https://graph.facebook.com/v16.0/$pageId/feed?access_token=$accessToken');
+      'https://graph.facebook.com/v16.0/$pageId/photos?access_token=$accessToken');
 
-  final response = await http.post(url, body: {'message': message});
+// Build the request body
+  final body = {'message': message};
+  if (imageUrl != null) {
+    body['url'] = imageUrl;
+  }
+  final response = await http.post(url, body: body);
 
-  /// This code block is checking if the HTTP response status code is equal to 200, which indicates a
-  /// successful request. If the status code is 200, it creates a new `FacebookPostResponse` object with
-  /// `isSuccess` set to `true`, a success message, and the HTTP response. It then returns this object
-  /// as the result of the `postToFacebookPage` function.
   if (response.statusCode == 200) {
     return FacebookPostResponse(
       isSuccess: true,
       message: 'Successfully posted to Facebook page.',
       response: response,
     );
-  }
-
-  /// This code block is executed if the HTTP response status code is not equal to 200, indicating
-  /// that the request to post to the Facebook page was not successful. It decodes the response body
-  /// using JSON and extracts the error message from the response body. It then creates a new
-  /// `FacebookPostResponse` object with `isSuccess` set to `false`, an error message indicating the
-  /// reason for the failure, and the HTTP response. This object is then returned as the result of the
-  /// `postToFacebookPage` function.
-  else {
+  } else {
     final responseBody = json.decode(response.body);
     final errorMessage = responseBody['error']['message'];
     return FacebookPostResponse(
