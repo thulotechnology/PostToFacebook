@@ -8,11 +8,10 @@ To use this package, add post_to_facebook as a dependency in your pubspec.yaml f
 
 ``` dart
 dependencies:
-  post_to_facebook: ^1.0.0
+  post_to_facebook: ^0.0.1
 ```
 
 ## Usage
-
 To use this package, you need to have a valid Facebook access token that has the publish_pages and/or publish_to_groups permissions, depending on the targets you want to post to. You can obtain an access token by creating a Facebook app, authorizing it with your Facebook account, and using the app ID and secret to generate a token via the [Graph API Explorer][gApi].
 
 [gApi]: https://developers.facebook.com/docs/graph-api/get-started
@@ -46,9 +45,7 @@ void main() async {
 ```
 
 ## License
-
-This package is licensed under the MIT License. See the LICENSE file for details.
+This package is licensed under the BSD 3-clause license. See the LICENSE file for details.
 
 ## Contributions
-
 Please file issues and feature requests in the GitHub repository. Contributions via pull requests are welcome and encouraged.

@@ -1,7 +1,7 @@
 name: post_to_facebook
 description: A Dart package for posting content to Facebook on behalf of a user or page.
-version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+version: 0.0.1
+repository: https://github.com/thulotechnology/PostToFacebook
 environment:
   sdk: ">=2.19.6 <3.0.0"
 
